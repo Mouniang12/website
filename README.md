@@ -1,29 +1,19 @@
-# website
+## Projet Full Stack CRUD
 
-This template should help get you started developing with Vue 3 in Vite.
+Application web pour l'inscription, l'authentification, et la gestion des tâches avec Vue.js (frontend) et Node.js/Express (backend), utilisant MongoDB.
 
-## Recommended IDE Setup
+## Fonctionnalités
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Inscription et connexion des utilisateurs.
+- Gestion des tâches (CRUD).
 
-## Customize configuration
+## Installation
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+1. **Frontend** : 
+   ```bash
+   npm install
+   npm run dev
+2. **Backend** :
+  ```bash
+  npm install
+  npm start
