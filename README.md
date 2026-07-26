@@ -1,106 +1,155 @@
-# 🎭 User Inyerface – Refonte UX/UI
+# ✅ Gestionnaire de Tâches (Full Stack CRUD)
 
-**User Inyerface** est un projet pédagogique qui revisite [userinyerface.com](https://userinyerface.com/), un site expérimental volontairement conçu pour regrouper les pires pratiques en matière d'expérience utilisateur (UX) et d'interface (UI) — ce qu'on appelle des *dark patterns* : des éléments qui piègent, déroutent ou frustrent l'utilisateur au lieu de l'aider.
+Cette application web permet à chaque utilisateur de créer un compte, de se connecter, puis de gérer sa propre liste de tâches personnelle : ajouter une tâche, la marquer comme terminée, ou la supprimer.
 
-L'objectif de ce projet est de reprendre ce parcours volontairement pénible et de le retravailler pour obtenir une interface réellement centrée sur l'utilisateur, en appliquant les principes fondamentaux du **design centré utilisateur** (User-Centered Design).
+C'est un projet du type "to-do list", mais avec un vrai système de comptes : chaque utilisateur ne voit et ne gère que ses propres tâches.
 
-> 💡 **Vous n'êtes pas développeur ?** La première partie de ce document explique le projet en langage simple. La partie technique (comment ouvrir et consulter les pages) se trouve plus loin.
-
----
-
-## 🖥️ De quoi s'agit-il ?
-
-Le site original, [userinyerface.com](https://userinyerface.com/), met le visiteur au défi de remplir un formulaire d'inscription en un temps limité, tout en multipliant volontairement les pièges : boutons qui ne font pas ce qu'ils annoncent, champs mal étiquetés, messages d'erreur incompréhensibles, absence de repères visuels, etc. C'est un exercice ludique très connu dans le milieu du design UX, utilisé pour faire ressentir concrètement à quel point de mauvais choix de conception peuvent rendre une interface désagréable, voire inutilisable.
-
-Ce projet reprend ce même parcours (une création de compte en plusieurs étapes) mais en corrigeant, étape par étape, les problèmes du site original :
-
-- Une **navigation claire**, avec une progression visible (étape 1 sur 4, 2 sur 4, etc.)
-- Des **formulaires compréhensibles** : libellés explicites, indications claires sur ce qui est attendu (par exemple les critères d'un mot de passe), messages d'erreur utiles plutôt que déroutants
-- Des **boutons et champs facilement identifiables**, avec une hiérarchie visuelle cohérente
-- Une meilleure **accessibilité** : navigation au clavier, contrastes conformes aux normes, libellés explicites pour les lecteurs d'écran
-
-### 📄 Les pages du projet
-
-| Page | Contenu |
-|---|---|
-| `index.html` | Page d'accueil : présentation du principe et bouton pour démarrer le parcours |
-| `etape1.html` | Étape 1 — Création du compte : choix d'un mot de passe, adresse courriel, acceptation des conditions |
-| `etape2.html` | Étape 2 — Profil : ajout d'une photo de profil et sélection de centres d'intérêt |
-| `etape3.html` | Étape 3 — Informations personnelles : civilité, nom, date de naissance, adresse, pays |
-
-> ℹ️ Le parcours annonce 4 étapes au total ; à ce stade du projet, les étapes 1 à 3 sont construites. C'est un projet pédagogique en cours d'évolution plutôt qu'un produit fini.
+> 💡 **Vous n'êtes pas développeur ?** La première partie de ce document explique le fonctionnement de l'application en langage simple. La partie technique (installation, code) se trouve plus loin, pour les personnes qui veulent faire tourner le projet sur leur ordinateur.
 
 ---
 
-## 🎓 Approche et principes appliqués
+## 🖥️ À quoi sert cette application ?
 
-Cette refonte s'appuie sur plusieurs notions clés de l'ergonomie des interfaces :
+L'idée est simple : offrir un espace personnel où chacun peut noter ce qu'il a à faire et suivre son avancement.
 
-- **Le design centré utilisateur** : concevoir en partant des besoins réels de la personne qui utilise l'interface, plutôt que de ses propres intentions
-- **Les heuristiques de Nielsen** : un ensemble de règles reconnues pour évaluer et améliorer l'utilisabilité d'une interface (visibilité de l'état du système, cohérence, prévention des erreurs, etc.)
-- **La loi de Hick** : plus on propose de choix à quelqu'un, plus cela lui prend de temps pour décider — d'où l'intérêt de limiter et clarifier les options
-- **La loi de Fitts** : plus une cible (comme un bouton) est grande et proche, plus elle est facile et rapide à atteindre
-- **La reconnaissance plutôt que la mémorisation** : privilégier des éléments visibles et explicites plutôt que d'obliger l'utilisateur à se souvenir d'une information ou d'une règle cachée
-- **Les normes WCAG** (Web Content Accessibility Guidelines) : les standards internationaux d'accessibilité numérique
+### 👤 Comptes utilisateurs
+Chaque personne crée son propre compte (nom, prénom, email, mot de passe) et se connecte ensuite avec son email et son mot de passe. Le mot de passe n'est jamais stocké tel quel : il est chiffré avant d'être enregistré, pour protéger les utilisateurs.
 
-Ce travail a aussi une dimension pédagogique : en comparant directement une interface volontairement mal conçue avec sa version retravaillée, on comprend plus concrètement l'impact réel des choix UX/UI sur l'expérience d'une personne qui utilise un site.
+### 📝 Gestion des tâches
+Une fois connecté, l'utilisateur accède à sa liste de tâches personnelle et peut :
+- **Ajouter** une nouvelle tâche (avec un titre et une description)
+- **Marquer une tâche comme terminée** (ou la remettre "en cours")
+- **Supprimer** une tâche
+
+Chaque tâche appartient à un seul utilisateur : personne d'autre ne peut voir ou modifier les tâches d'un autre compte.
+
+---
+
+## 🧩 Comment l'application est construite (vue d'ensemble)
+
+Cette application est composée de **deux grandes parties** qui fonctionnent ensemble :
+
+| Partie | Rôle | Où c'est situé |
+|---|---|---|
+| 🌐 **Interface web (frontend)** | Ce que l'utilisateur voit et utilise dans son navigateur | racine du projet + dossier `src/` |
+| 🖥️ **Serveur (backend)** | Le "cerveau" caché qui gère les comptes et les tâches | dossier `backend/` |
+
+L'interface web envoie des demandes au serveur (par exemple : « connecte-moi », « ajoute cette tâche », « supprime cette tâche »), et le serveur vérifie l'identité de l'utilisateur, va chercher ou enregistre les informations dans une base de données, puis répond à l'interface.
 
 ---
 
 ## 🛠️ Technologies utilisées
 
-Ce projet est volontairement simple sur le plan technique, pour rester centré sur la démonstration UX/UI :
+**Backend (serveur)**
+- [Node.js](https://nodejs.org/) — environnement d'exécution JavaScript côté serveur
+- [Express](https://expressjs.com/) — framework pour créer l'API (le service qui répond aux demandes de l'interface)
+- [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/) — base de données qui stocke les utilisateurs et les tâches
+- [bcrypt](https://www.npmjs.com/package/bcryptjs) — pour chiffrer les mots de passe
+- [JSON Web Token (JWT)](https://jwt.io/) — pour sécuriser la connexion des utilisateurs
+- [express-validator](https://express-validator.github.io/) — pour valider les données envoyées par les formulaires (email valide, mot de passe assez long, etc.)
 
-- **HTML** — structure des pages
-- **CSS** (intégré directement dans chaque page) — mise en forme visuelle
-- **JavaScript** — pour les interactions (minuteur, sélection des centres d'intérêt, validations de formulaire, etc.)
-- [Bootstrap](https://getbootstrap.com/) — utilisé sur la page `etape1.html` pour certains composants d'interface
-- Police [Poppins](https://fonts.google.com/specimen/Poppins) (Google Fonts)
-
-Aucun framework, aucune installation de dépendances ni serveur particulier n'est nécessaire : ce sont de simples pages web autonomes.
+**Frontend (interface web)**
+- [Vue.js](https://vuejs.org/) (v3) — framework pour construire l'interface web
+- [Vue Router](https://router.vuejs.org/) — pour la navigation entre les pages (connexion, inscription, liste des tâches)
+- [Pinia](https://pinia.vuejs.org/) — pour gérer l'état de connexion de l'utilisateur
+- [Axios](https://axios-http.com/) — pour communiquer avec le serveur
+- [Tailwind CSS](https://tailwindcss.com/) — pour la mise en forme visuelle
+- [Vite](https://vite.dev/) — outil qui fait tourner et assemble l'application pendant le développement
 
 ---
 
-## 🚀 Comment consulter le projet
+## 🚀 Installation et démarrage (partie technique)
 
-Aucune installation n'est requise. Deux façons simples de voir le résultat :
+Cette section s'adresse aux personnes qui souhaitent faire fonctionner le projet sur leur propre ordinateur.
 
-### Option 1 — Ouvrir directement les fichiers
-1. Téléchargez ou clonez le projet sur votre ordinateur.
-2. Double-cliquez sur le fichier `index.html` : il s'ouvrira dans votre navigateur par défaut.
-3. Cliquez sur **START** pour suivre le parcours, étape par étape.
+### Prérequis
 
-### Option 2 — Utiliser un petit serveur local (recommandé pour un rendu plus fidèle)
-Certains navigateurs appliquent des restrictions lorsqu'un fichier HTML est ouvert directement (protocole `file://`). Pour éviter tout souci, vous pouvez lancer un petit serveur local :
+- **[Node.js](https://nodejs.org/)** (avec npm)
+- **[MongoDB](https://www.mongodb.com/try/download/community)** (en local ou via un service cloud comme [MongoDB Atlas](https://www.mongodb.com/atlas))
 
-```bash
-# Depuis le dossier du projet
-npx serve .
-```
-ou, si vous avez Python installé :
-```bash
-python3 -m http.server
-```
-Puis ouvrez l'adresse indiquée dans le terminal (généralement `http://localhost:8000` ou similaire) dans votre navigateur.
+---
+
+### 1️⃣ Démarrer le serveur (backend)
+
+1. Ouvrez un terminal et déplacez-vous dans le dossier `backend` :
+   ```bash
+   cd backend
+   ```
+
+2. Installez les dépendances du projet :
+   ```bash
+   npm install
+   ```
+
+3. Un fichier `.env` est déjà présent avec une configuration de base :
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://localhost:27017/app-crud
+   JWT_SECRET=votre_cle_secrete
+   ```
+   Adaptez `MONGO_URI` si votre base de données MongoDB se trouve ailleurs, et remplacez `JWT_SECRET` par une valeur secrète de votre choix (à ne jamais partager publiquement).
+
+4. Lancez le serveur :
+   ```bash
+   npm start
+   ```
+   ou, pour un redémarrage automatique à chaque modification du code :
+   ```bash
+   npm run dev
+   ```
+   Le serveur démarre sur `http://localhost:5000/` (ou le port indiqué dans `.env`).
+
+---
+
+### 2️⃣ Démarrer l'interface web (frontend)
+
+1. Depuis la racine du projet (pas le dossier `backend`), installez les dépendances :
+   ```bash
+   npm install
+   ```
+
+2. Lancez l'application :
+   ```bash
+   npm run dev
+   ```
+
+3. Ouvrez votre navigateur à l'adresse indiquée dans le terminal, généralement :
+   ```
+   http://localhost:5173/
+   ```
+
+---
+
+## ⚠️ À savoir avant de démarrer
+
+Ce projet est fonctionnel mais encore en développement ; quelques points à garder en tête si vous l'explorez :
+
+- Certains fichiers du backend (`routes/task.routes.js`) font référence à des fichiers (`models/Task.js`, `middleware/auth.js`) dont les noms ou emplacements réels diffèrent légèrement dans le projet (`models/Tasks.js`, `routes/auth.js`). Il faudra harmoniser ces chemins pour que la gestion des tâches fonctionne pleinement de bout en bout.
+- La clé secrète utilisée pour sécuriser les connexions (JWT) est actuellement écrite en clair dans le code de certains fichiers plutôt que lue depuis le fichier `.env` ; il est recommandé de centraliser cette valeur dans `.env` avant toute mise en ligne réelle du projet.
 
 ---
 
 ## 📂 Structure du projet
 
 ```
-user-inyerface/
-├── index.html      # Page d'accueil / démarrage du parcours
-├── etape1.html      # Étape 1 : création du compte
-├── etape2.html       # Étape 2 : profil et centres d'intérêt
-└── etape3.html       # Étape 3 : informations personnelles
+website/
+├── src/                      # Interface web (Vue.js)
+│   ├── pages/
+│   │   ├── Home.vue          # Page d'accueil
+│   │   ├── Login.vue         # Page de connexion
+│   │   ├── Register.vue      # Page d'inscription
+│   │   └── TaskList.vue      # Liste des tâches de l'utilisateur connecté
+│   ├── router/                # Définition des différentes pages/URLs de l'application
+│   ├── store/                 # Gestion de l'état de connexion (Pinia)
+│   └── App.vue                 # Composant racine de l'application
+│
+└── backend/                   # Serveur (API, base de données, logique métier)
+    ├── controllers/            # Logique des fonctionnalités (authentification)
+    ├── models/                 # Structure des données stockées (utilisateur, tâche)
+    └── routes/                 # Les "chemins" (URLs) que l'interface web peut appeler
 ```
 
 ---
-
-## 🔗 Référence
-
-Le site original, source d'inspiration de ce projet, est disponible ici :
-[https://userinyerface.com/](https://userinyerface.com/)
 
 ## 📄 Licence
 
